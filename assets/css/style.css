@@ -29,16 +29,28 @@ z-index: -1;
     margin-bottom: 0;
 }
 
+.char-choice, .enemy-choice {
+    cursor: pointer;
+}
 
-.chosen-character {
+.enemy-choice {
+    background: red;
+    color: white;
+}
+
+
+
+
+.hide {
+    display: none;
+}
+
+.chosen {
     border: 2px solid green;
 }
 
 .chosen-enemy {
     border: 2px solid red;
-}
-
-.available-enemy {
-    background: red;
-    color: white;
+    background: #fff;
+    color: black;
 }
