@@ -27,6 +27,7 @@ z-index: -1;
 .name {
     padding: 5px;
     margin-bottom: 0;
+    font-weight: bold;
 }
 
 .char-choice, .enemy-choice {
@@ -36,6 +37,10 @@ z-index: -1;
 .enemy-choice {
     background: red;
     color: white;
+}
+
+.player-score {
+    margin-bottom: 0;
 }
 
 
