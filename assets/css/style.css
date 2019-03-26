@@ -1,0 +1,44 @@
+img {
+    width: 250px;
+}
+
+body {
+    /* position: relative; */
+}
+
+body::after {
+content: "";
+background: url("../images/background2.5.jpg");
+background-size: cover;
+opacity: 0.5;
+top: 0;
+left: 0;
+bottom: 0;
+right: 0;
+position: absolute;
+z-index: -1;   
+}
+
+.character {
+    background: #fff;
+    padding: 2px;
+}
+
+.name {
+    padding: 5px;
+    margin-bottom: 0;
+}
+
+
+.chosen-character {
+    border: 2px solid green;
+}
+
+.chosen-enemy {
+    border: 2px solid red;
+}
+
+.available-enemy {
+    background: red;
+    color: white;
+}
