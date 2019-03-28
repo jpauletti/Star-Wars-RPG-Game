@@ -6,7 +6,9 @@ var game = {
     $yourCharacter: $("#your-character"),
     $enemiesSection: $(".enemies"),
     $fightSection: $(".fight"),
+    $attackBtn: $("#attack"),
 
+    
     // enemies: [
     //     {
     //         name: ,
@@ -15,20 +17,25 @@ var game = {
     //     }
     // ],
 
+    // enemies don't have attackPower
     // characters: [
     //     {
-    //         name: ,
-    //         healthPoints: ,
-    //         attackPower: , // multiples every time ex 6 12 18 24 etc
-    //         counterAttackPower: ,
+    //         name: Rey,
+    //         healthPoints: 100,
+    //         attackPower: 10, // multiples every time ex 6 12 18 24 etc
+    //         counterAttackPower: 8,
     //     }
     // ],
 
-    attack: function () {
-        // you attack - hit attack button
-        // enemy HP - yourChar attack, attack ^ 2
-        // your HP - enemy counterAttack, their attack ^2
-    },
+    chars: {
+        rey : {
+            name: "Rey",
+            healthPoints: 100,
+            attackPower: 10, // multiples every time ex 6 12 18 24 etc
+            counterAttackPower: 8,
+        }
+
+    }
 
 
 };
@@ -38,7 +45,9 @@ game.$charChoice.on("click", function() {
     game.$chosenChar = $(this);
     // add chosen class
     game.$chosenChar.addClass("chosen");
+    // change text for this section
     game.$yourCharacter.text("Your Character");
+    // show enemy section
     game.$enemiesSection.removeClass("hide");
 
     // hide other character options without chosen class
@@ -50,18 +59,27 @@ game.$charChoice.on("click", function() {
 })
 
 // select enemy
+var enemyChosen = false;
 game.$enemyChoice.on("click", function () {
     game.$chosenEnemy = $(this);
-    // add chosen class
-    game.$chosenEnemy.addClass("chosen-enemy");
-    game.$fightSection.removeClass("hide");
+    if (!enemyChosen) {
+        // add chosen class
+        game.$chosenEnemy.addClass("chosen-enemy");
+        // show fight section
+        game.$fightSection.removeClass("hide");
 
-    // hide other character options without chosen class
-    $.each(game.$enemyChoice, function (i, choice) {
-        if (choice.classList.contains("chosen-enemy")) {
-            // move chosen enemy to defender area
-            var $enemyPosition = $("#enemy-position");
-            $(this).parent().appendTo($enemyPosition);
-        }
-    });
+        // move chosen enemy to defender area
+        var $enemyPosition = $("#enemy-position");
+        $(this).parent().appendTo($enemyPosition);
+
+        // enemy chosen - can't pick multiple enemies
+        enemyChosen = true;
+    }
 })
+
+// click attack button
+game.$attackBtn.on("click", function() {
+    // you attack - hit attack button
+    // enemy HP - yourChar attack, attack ^ 2
+    // your HP - enemy counterAttack, their attack ^2
+});
