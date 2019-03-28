@@ -1,3 +1,6 @@
+var myChar = "";
+var myEnemy = "";
+
 var game = {
     $charChoice: $(".char-choice"),
     $enemyChoice: $(".enemy-choice"),
@@ -41,14 +44,15 @@ var game = {
 
 };
 
-// char click
+// select character - click
 $(document).on('click', '.char-choice', function (e) {
     console.log("character picked");
     console.log(game.$charChoice);
     console.log(game.$enemyChoice);
     // save char name
     game.$charName = $(this).children(".name").text().toLowerCase();
-    console.log($(this).children(".name").text());
+    myChar = $(this).children(".name").text().toLowerCase();
+    console.log(game.$charName);
     game.$chosenChar = $(this);
     // add chosen class
     game.$chosenChar.addClass("chosen");
@@ -73,12 +77,13 @@ $(document).on('click', '.char-choice', function (e) {
     console.log(game.$enemyChoice);
 });
 
-//enemy click
+// select enemy - click
 var enemyChosen = false;
 $(document).on('click', '.enemy-choice', function (e) {
     console.log("enemy picked");
     // save enemy name
     game.$enemyName = $(this).children(".name").text().toLowerCase();
+    myEnemy = $(this).children(".name").text().toLowerCase();
 
     game.$chosenEnemy = $(this);
     if (!enemyChosen) {
@@ -98,93 +103,42 @@ $(document).on('click', '.enemy-choice', function (e) {
 
 
 
-
-
-
-// select character
-// game.$charChoice.on("click", function() {
-//     console.log("character picked");
-//     console.log(game.$charChoice);
-//     console.log(game.$enemyChoice);
-//     // save char name
-//     game.$charName = $(this).children(".name").text().toLowerCase();
-//     console.log($(this).children(".name").text());
-//     game.$chosenChar = $(this);
-//     // add chosen class
-//     game.$chosenChar.addClass("chosen");
-//     // change text for this section
-//     game.$yourCharacter.text("Your Character");
-//     // show enemy section
-//     game.$enemiesSection.removeClass("hide");
-
-//     $.each(game.$charChoice, function (i, choice) {
-//         if (!choice.classList.contains("chosen")) {
-//             // move leftover characters to enemy choices
-//             $(this).parent().appendTo($("#enemy-cards"));
-//             // remove char-class, give them enemy class
-//             $(this).removeClass("char-choice");
-//             $(this).addClass("enemy-choice"); // html is updated, but old char-choice items are still getting click events
-//         }
-//     });
-
-//     game.$charChoice = $(".char-choice"); // update so it doesn't include old ones ????? not working
-//     game.$enemyChoice = $(".enemy-choice"); // update to include new ones ?????
-//     console.log(game.$charChoice);
-//     console.log(game.$enemyChoice);
-
-
-
-//     ////////////////// move others to the enemy options instead of having duplicates
-// })
-
-// select enemy
-// var enemyChosen = false;
-// game.$enemyChoice.on("click", function () {
-//     console.log("enemy picked");
-//     // save enemy name
-//     game.$enemyName = $(this).children(".name").text().toLowerCase();
-
-//     game.$chosenEnemy = $(this);
-//     if (!enemyChosen) {
-//         // add chosen class
-//         game.$chosenEnemy.addClass("chosen-enemy");
-//         // show fight section
-//         game.$fightSection.removeClass("hide");
-
-//         // move chosen enemy to defender area
-//         var $enemyPosition = $("#enemy-position");
-//         $(this).parent().appendTo($enemyPosition);
-
-//         // enemy chosen - can't pick multiple enemies
-//         enemyChosen = true;
-//     }
-// })
-
 // click attack button
+// counter variable for attack
+var i = 1;
+
+// get your character's health
+var name = game.$charName;
+console.log(game);
+console.log(game.chars);
+console.log(game.chars.name);
+console.log(game.chars.myChar);
+console.log(game.chars.name.HP);
+console.log(game.chars.myChar.HP);
+var yourHealth = game.chars[myChar].HP;
+var baseAttack = game.chars.myChar.baseAttackPower;
+var attackPower = baseAttack ^ i;
+console.log(game.chars.name.HP);
+
+
+// get enemy health
+var enemyName = game.$enemyName;
+var enemyHealth = game.chars.enemyName.HP;
+var enemyCounterAttack = game.chars.enemyName.counterAttackPower;
+
 game.$attackBtn.on("click", function() {
     // enemy only has counter attack
 
-    // counter variable for attack
-    var i = 2;
-
-    // get your character's health
-    var yourHealth = game.chars[game.$charName].HP;
-    var baseAttack = game.chars[game.$charName].baseAttackPower;
-    var attackPower = baseAttack;
-    console.log(game.chars[game.$charName].HP);
-
-    // get enemy health
-    var enemyHealth = game.chars[game.$enemyName].HP;
-    var enemyCounterAttack = game.chars[game.$enemyName].counterAttackPower;
-
+    // enemy health update
     enemyHeatlh = enemyHealth - attackPower;
     game.$chosenEnemy.children(".player-score").text(enemyHealth);
 
-    attackPower = baseAttack ^ i;
+    // your health update
     yourHealth = yourHealth - enemyCounterAttack;
     game.$chosenChar.children(".player-score").text(yourHealth);
     i++;
-    console.log(attackPower + ' ' + i);
+    console.log("attack power: " + attackPower + ' ' + i);
+    console.log('i: ' + i);
 
     // you attack - hit attack button
     // enemy HP - yourChar attack, attack ^ 2
