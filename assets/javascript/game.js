@@ -41,9 +41,11 @@ var game = {
 
 };
 
-// select character
-game.$charChoice.on("click", function() {
+// char click
+$(document).on('click', '.char-choice', function (e) {
     console.log("character picked");
+    console.log(game.$charChoice);
+    console.log(game.$enemyChoice);
     // save char name
     game.$charName = $(this).children(".name").text().toLowerCase();
     console.log($(this).children(".name").text());
@@ -55,27 +57,25 @@ game.$charChoice.on("click", function() {
     // show enemy section
     game.$enemiesSection.removeClass("hide");
 
-    // hide other character options without chosen class
     $.each(game.$charChoice, function (i, choice) {
         if (!choice.classList.contains("chosen")) {
             // move leftover characters to enemy choices
             $(this).parent().appendTo($("#enemy-cards"));
             // remove char-class, give them enemy class
             $(this).removeClass("char-choice");
-            $(this).addClass("enemy-choice");
+            $(this).addClass("enemy-choice"); // html is updated, but old char-choice items are still getting click events
         }
     });
 
-    game.$charChoice = $(".char-choice"); // update so it doesn't include old ones
+    game.$charChoice = $(".char-choice"); // update so it doesn't include old ones ????? not working
+    game.$enemyChoice = $(".enemy-choice"); // update to include new ones ?????
+    console.log(game.$charChoice);
+    console.log(game.$enemyChoice);
+});
 
-
-
-    ////////////////// move others to the enemy options instead of having duplicates
-})
-
-// select enemy
+//enemy click
 var enemyChosen = false;
-game.$enemyChoice.on("click", function () {
+$(document).on('click', '.enemy-choice', function (e) {
     console.log("enemy picked");
     // save enemy name
     game.$enemyName = $(this).children(".name").text().toLowerCase();
@@ -94,7 +94,71 @@ game.$enemyChoice.on("click", function () {
         // enemy chosen - can't pick multiple enemies
         enemyChosen = true;
     }
-})
+});
+
+
+
+
+
+
+// select character
+// game.$charChoice.on("click", function() {
+//     console.log("character picked");
+//     console.log(game.$charChoice);
+//     console.log(game.$enemyChoice);
+//     // save char name
+//     game.$charName = $(this).children(".name").text().toLowerCase();
+//     console.log($(this).children(".name").text());
+//     game.$chosenChar = $(this);
+//     // add chosen class
+//     game.$chosenChar.addClass("chosen");
+//     // change text for this section
+//     game.$yourCharacter.text("Your Character");
+//     // show enemy section
+//     game.$enemiesSection.removeClass("hide");
+
+//     $.each(game.$charChoice, function (i, choice) {
+//         if (!choice.classList.contains("chosen")) {
+//             // move leftover characters to enemy choices
+//             $(this).parent().appendTo($("#enemy-cards"));
+//             // remove char-class, give them enemy class
+//             $(this).removeClass("char-choice");
+//             $(this).addClass("enemy-choice"); // html is updated, but old char-choice items are still getting click events
+//         }
+//     });
+
+//     game.$charChoice = $(".char-choice"); // update so it doesn't include old ones ????? not working
+//     game.$enemyChoice = $(".enemy-choice"); // update to include new ones ?????
+//     console.log(game.$charChoice);
+//     console.log(game.$enemyChoice);
+
+
+
+//     ////////////////// move others to the enemy options instead of having duplicates
+// })
+
+// select enemy
+// var enemyChosen = false;
+// game.$enemyChoice.on("click", function () {
+//     console.log("enemy picked");
+//     // save enemy name
+//     game.$enemyName = $(this).children(".name").text().toLowerCase();
+
+//     game.$chosenEnemy = $(this);
+//     if (!enemyChosen) {
+//         // add chosen class
+//         game.$chosenEnemy.addClass("chosen-enemy");
+//         // show fight section
+//         game.$fightSection.removeClass("hide");
+
+//         // move chosen enemy to defender area
+//         var $enemyPosition = $("#enemy-position");
+//         $(this).parent().appendTo($enemyPosition);
+
+//         // enemy chosen - can't pick multiple enemies
+//         enemyChosen = true;
+//     }
+// })
 
 // click attack button
 game.$attackBtn.on("click", function() {
