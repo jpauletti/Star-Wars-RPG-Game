@@ -103,8 +103,9 @@ var enemyCounterAttack = "";
 var enemyChosen = false;
 $(document).on('click', '.enemy-choice', function (e) {
 
-    game.$chosenEnemy = $(this);
     if (!enemyChosen) {
+        $(".defender > p").empty();
+        game.$chosenEnemy = $(this);
         console.log("enemy picked");
         // save enemy name
         game.$enemyName = $(this).children(".name").text().toLowerCase();
@@ -138,6 +139,7 @@ $(document).on('click', '.enemy-choice', function (e) {
 // click attack button
 // counter variable for attack
 var i = 1;
+var wins = 0;
 
 game.$attackBtn.on("click", function() {
     // enemy only has counter attack
@@ -160,11 +162,22 @@ game.$attackBtn.on("click", function() {
             console.log("you win");
             // remove enemy from game
             game.$chosenEnemy.parent().remove();
-            game.$defender.append($("<p>Choose a new opponent!</p>"));
+
+            if (wins === 0) {
+                game.$defender.append($("<p>Choose a new opponent!</p>"));
+            } else if ($("#enemy-cards > div").length === 0) {
+                
+            } else {
+                $(".defender > p").text("Choose a new opponent!");
+            }
+
             enemyChosen = false;
+            wins++;
+
         } else if (yourHealth <= 0) {
             console.log("you lose");
         }
+
     }
 
 });
