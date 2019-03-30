@@ -9,7 +9,14 @@ var game = {
     $fightSection: $(".fight"),
     $attackBtn: $("#attack"),
     $charName: "",
+    $enemyName: "",
     $defender: $(".defender"),
+    yourHealth: "",
+    baseAttack: "",
+    attackPower: "",
+    enemyHealth: "",
+    enemyCounterAttack: "",
+    enemyChosen: false,
 
 
     chars: [
@@ -23,7 +30,7 @@ var game = {
             name: "Yoda",
             HP: 150,
             baseAttackPower: 4, // multiples every time ex 6 12 18 24 etc
-            counterAttackPower: 2,
+            counterAttackPower: 15,
         },
         {
             name: "Char3",
@@ -33,8 +40,8 @@ var game = {
         },
         {
             name: "Char4",
-            HP: 100,
-            baseAttackPower: 2, // multiples every time ex 6 12 18 24 etc
+            HP: 80,
+            baseAttackPower: 1, // multiples every time ex 6 12 18 24 etc
             counterAttackPower: 2,
         }
 
@@ -43,10 +50,6 @@ var game = {
 
 };
 
-var yourHealth = "";
-var baseAttack = "";
-var attackPower = "";
-
 // select character - click
 $(document).on('click', '.char-choice', function (e) {
     console.log("character picked");
@@ -54,16 +57,17 @@ $(document).on('click', '.char-choice', function (e) {
     console.log(game.$enemyChoice);
     // save char name
 
+    // save character name
     game.$charName = $(this).children(".name").text().toLowerCase();
 
     // pull character's data
     for (var i = 0; i < game.chars.length; i++) {
         if (game.$charName === game.chars[i].name.toLowerCase()) {
             console.log("name match")
-            yourHealth = game.chars[i].HP;
-            console.log(yourHealth);
-            baseAttack = game.chars[i].baseAttackPower;
-            attackPower = baseAttack * i;
+            game.yourHealth = game.chars[i].HP;
+            console.log(game.yourHealth);
+            game.baseAttack = game.chars[i].baseAttackPower;
+            game.attackPower = game.baseAttack * i;
         }
     }
 
@@ -85,38 +89,28 @@ $(document).on('click', '.char-choice', function (e) {
             $(this).parent().appendTo($("#enemy-cards"));
             // remove char-class, give them enemy class
             $(this).removeClass("char-choice");
-            $(this).addClass("enemy-choice"); // html is updated, but old char-choice items are still getting click events
+            $(this).addClass("enemy-choice");
         }
     });
-
-    game.$charChoice = $(".char-choice"); // update so it doesn't include old ones ????? not working
-    game.$enemyChoice = $(".enemy-choice"); // update to include new ones ?????
-    console.log(game.$charChoice);
-    console.log(game.$enemyChoice);
 });
 
 
-var enemyHealth = "";
-var enemyCounterAttack = "";
-
 // select enemy - click
-var enemyChosen = false;
 $(document).on('click', '.enemy-choice', function (e) {
 
-    if (!enemyChosen) {
+    if (!game.enemyChosen) {
         $(".defender > p").empty();
         game.$chosenEnemy = $(this);
         console.log("enemy picked");
         // save enemy name
-        game.$enemyName = $(this).children(".name").text().toLowerCase();
+        game.$enemyName = $(this).children(".name").text();
 
         // pull enemy's data
         for (var i = 0; i < game.chars.length; i++) {
-            if (game.$enemyName === game.chars[i].name.toLowerCase()) {
-                console.log("enemy name match")
-                enemyHealth = game.chars[i].HP;
-                console.log(yourHealth);
-                enemyCounterAttack = game.chars[i].counterAttackPower;
+            if (game.$enemyName.toLowerCase() === game.chars[i].name.toLowerCase()) {
+                game.enemyHealth = game.chars[i].HP;
+                console.log(game.yourHealth);
+                game.enemyCounterAttack = game.chars[i].counterAttackPower;
             }
         }
         
@@ -130,7 +124,7 @@ $(document).on('click', '.enemy-choice', function (e) {
         $(this).parent().appendTo($enemyPosition);
 
         // enemy chosen - can't pick multiple enemies
-        enemyChosen = true;
+        game.enemyChosen = true;
     }
 });
 
@@ -144,38 +138,53 @@ var wins = 0;
 game.$attackBtn.on("click", function() {
     // enemy only has counter attack
 
-    if (enemyHealth > 0 && yourHealth > 0) {
-        attackPower = baseAttack * i;
+    if (game.enemyHealth > 0 && game.yourHealth > 0) {
+        game.attackPower = game.baseAttack * i;
 
         // enemy health update
-        enemyHealth = enemyHealth - attackPower;
-        game.$chosenEnemy.children(".player-score").text(enemyHealth);
+        game.enemyHealth = game.enemyHealth - game.attackPower;
+        game.$chosenEnemy.children(".player-score").text(game.enemyHealth);
 
         // your health update
-        yourHealth = yourHealth - enemyCounterAttack;
-        game.$chosenChar.children(".player-score").text(yourHealth);
+        game.yourHealth = game.yourHealth - game.enemyCounterAttack;
+        game.$chosenChar.children(".player-score").text(game.yourHealth);
         i++;
-        console.log("attack power: " + attackPower + ' ' + i);
+
+        if ($(".attack-right > p").length === 0) {
+            $(".attack-right").append($("<p>You attacked " + game.$enemyName + " for " + game.attackPower + " damage.</p>"));
+            $(".attack-right").append($("<p>" + game.$enemyName + " attacked you back for " + game.enemyCounterAttack + " damage.</p>"));
+        } else {
+            $(".attack-right > p:nth-of-type(1)").text("You attacked " + game.$enemyName + " for " + game.attackPower + " damage.");
+            $(".attack-right > p:nth-of-type(2)").text(game.$enemyName + " attacked you back for " + game.enemyCounterAttack + " damage.");
+        }
+
+        console.log("attack power: " + game.attackPower);
         console.log('i: ' + i);
 
-        if (enemyHealth <= 0) {
+        if (game.enemyHealth <= 0) {
             console.log("you win");
             // remove enemy from game
             game.$chosenEnemy.parent().remove();
+            // clear text about attacks
+            $(".attack-right > p:nth-of-type(1)").text("");
+            $(".attack-right > p:nth-of-type(2)").text("");
 
             if (wins === 0) {
                 game.$defender.append($("<p>Choose a new opponent!</p>"));
             } else if ($("#enemy-cards > div").length === 0) {
-                
+                $(".defender > p").text("You won! Game over.");
             } else {
                 $(".defender > p").text("Choose a new opponent!");
             }
 
-            enemyChosen = false;
+            game.enemyChosen = false;
             wins++;
 
-        } else if (yourHealth <= 0) {
+        } else if (game.yourHealth <= 0) {
             console.log("you lose");
+            // clear text about attacks
+            $(".attack-right > p:nth-of-type(1)").text("");
+            $(".attack-right > p:nth-of-type(2)").text("");
         }
 
     }
